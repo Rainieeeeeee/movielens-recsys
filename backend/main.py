@@ -1,10 +1,26 @@
 # backend/main.py
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from recommender import Recommender
 
 # 创建 FastAPI 实例
 app = FastAPI(title="MovieLens Recommender API", version="1.0")
+
+origins = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    # 如果你还可能从其它端口或地址访问前端，也可加上
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+# --- CORS 结束 ---
 
 # 初始化推荐系统（只加载一次，避免重复加载模型）
 rec = Recommender()
